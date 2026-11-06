@@ -32,3 +32,12 @@ export function requireText(value: unknown, field: string): string {
   }
   return text
 }
+
+// Money: a positive whole number of cents. Rejects 0, negatives, decimals (10.5), numbers
+// sent as text ("1000"), null, and numbers too big to be exact in JavaScript. A bad value is a 422.
+export function requireCents(value: unknown, field: string): number {
+  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value <= 0) {
+    throw new HttpError(422, `${field} must be a positive whole number of cents`)
+  }
+  return value
+}
